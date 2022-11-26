@@ -17,6 +17,8 @@ public class Server : MonoBehaviour
 
     public void Init()
     {
+        Debug.Log("Server Started on port " + port);
+
         DontDestroyOnLoad(gameObject);
         clients = new List<ServerClient>();
         disconnectedList = new List<ServerClient>();
@@ -71,6 +73,25 @@ public class Server : MonoBehaviour
             disconnectedList.RemoveAt(i);
         }
     }
+
+    //? Server Send
+    private void Broadcast(string data, List<ServerClient> cl)
+    {
+        foreach (ServerClient sc in cl)
+        {
+            try
+            {
+                StreamWriter writer = new StreamWriter(sc.tcp.GetStream());
+                writer.WriteLine(data);
+                writer.Flush();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Error @Broadcast - " + e.Message);
+            }
+        }
+    }
+    //? Server Read
     private void OnComingData(ServerClient c, string data)
     {
         Debug.Log(c.clientName + " sent a message: " + data);
@@ -105,6 +126,7 @@ public class Server : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.Log("Error @IsConnected - " + e.Message);
             return false;
         }
     }
