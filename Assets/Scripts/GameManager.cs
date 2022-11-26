@@ -15,7 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject connectMenu;
     [SerializeField] private GameObject serverMenu;
 
-    [SerializeField] private TMP_InputField serverAddress;
+    [SerializeField] private TMP_InputField serverAddressInput;
+    [SerializeField] private TMP_InputField playerNameInput;
+
 
     public GameObject serverPrefab;
     public GameObject clientPrefab;
@@ -45,11 +47,15 @@ public class GameManager : MonoBehaviour
         {
             Server s = Instantiate(serverPrefab).GetComponent<Server>();
             s.Init();
+
+            Client c = Instantiate(clientPrefab).GetComponent<Client>();
+            if (c.clientName == null)
+                c.clientName = "Host";
+            c.ConnectToServer("127.0.0.1", 6321);
         }
         catch (Exception e)
         {
             Debug.Log("Server Init Error: " + e.Message);
-
         }
 
         mainMenu.SetActive(false);
@@ -59,13 +65,16 @@ public class GameManager : MonoBehaviour
     public void ConnectToServerButton()
     {
         Debug.Log("Connect to server");
-        string hostAddress = serverAddress.text;
+        string hostAddress = serverAddressInput.text;
         if (hostAddress == "")
             hostAddress = "127.0.0.1";
 
         try
         {
             Client c = Instantiate(clientPrefab).GetComponent<Client>();
+            c.clientName = playerNameInput.text;
+            if (c.clientName == null)
+                c.clientName = "Client";
             c.ConnectToServer(hostAddress, 6321);
             connectMenu.SetActive(false);
         }
