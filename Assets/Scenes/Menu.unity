@@ -1132,7 +1132,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1323330170}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: UpdateName
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -1534,7 +1546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Your Name
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3679,7 +3691,8 @@ MonoBehaviour:
   mainMenu: {fileID: 1502139802}
   connectMenu: {fileID: 2085874481}
   serverMenu: {fileID: 930258014}
-  serverAddress: {fileID: 1617301993}
+  serverAddressInput: {fileID: 1617301993}
+  playerNameInput: {fileID: 483160557}
   serverPrefab: {fileID: 2998657725423735027, guid: b6d28252be4b6604d8ec1170255e5949, type: 3}
   clientPrefab: {fileID: 1901021010702664526, guid: 229e79457c1910545a02b06db42cdf4a, type: 3}
 --- !u!4 &1323330171

@@ -15,7 +15,13 @@ public class Client : MonoBehaviour
     private StreamWriter writer;
     private StreamReader reader;
 
+    private List<GameClient> players = new List<GameClient>();
 
+
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Update()
     {
@@ -46,7 +52,7 @@ public class Client : MonoBehaviour
         {
             return false;
         }
-
+        Debug.Log("@ConnectToServer - Client " + clientName + " starting connecting");
         try
         {
             socket = new TcpClient(host, port);
@@ -76,7 +82,25 @@ public class Client : MonoBehaviour
     //? Read messages from the server
     private void OnInComingData(string data)
     {
-        Debug.Log("OnInComingData: " + data);
+        Debug.Log("Client_" + clientName + ": OnInComingData: " + data);
+        string[] splitedData = data.Split('|');
+        switch (splitedData[0])
+        {
+            case "S_WHO":
+                for (int i = 1; i < splitedData.Length - 1; i++)
+                {
+                    UserConnected(splitedData[i], false);
+                }
+                Send("C_WHO|" + clientName);
+                break;
+            case "S_CNN":
+                UserConnected(splitedData[1], false);
+                break;
+            default:
+                Debug.Log("No condition for " + splitedData[0]);
+                break;
+        }
+
     }
 
     private void CloseSocket()
@@ -91,10 +115,30 @@ public class Client : MonoBehaviour
         socketReady = false;
     }
 
+
+    private void UserConnected(string name, bool host)
+    {
+        Debug.Log("@UserConnected " + name);
+        if (name == "")
+        {
+            Debug.Log("@UserConnected - missing name data, return");
+            return;
+
+        }
+        GameClient gameClint = new GameClient();
+        gameClint.clientName = name;
+        gameClint.isHost = host;
+        players.Add(gameClint);
+
+        Debug.Log("@UserConnected - players.Count" + players.Count);
+        if (players.Count == 2)
+            GameManager.Instance.StartGame();
+
+    }
 }
 
 public class GameClient
 {
-    public string name;
+    public string clientName;
     public bool isHost;
 }

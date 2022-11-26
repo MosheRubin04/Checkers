@@ -73,8 +73,12 @@ public class Server : MonoBehaviour
             disconnectedList.RemoveAt(i);
         }
     }
-
     //? Server Send
+    private void Broadcast(string data, ServerClient c)
+    {
+        List<ServerClient> sl = new List<ServerClient> { c };
+        Broadcast(data, sl);
+    }
     private void Broadcast(string data, List<ServerClient> cl)
     {
         foreach (ServerClient sc in cl)
@@ -94,21 +98,36 @@ public class Server : MonoBehaviour
     //? Server Read
     private void OnComingData(ServerClient c, string data)
     {
-        Debug.Log(c.clientName + " sent a message: " + data);
+        Debug.Log("Server OnInComingData: " + data);
+        string[] splitedData = data.Split('|');
+        switch (splitedData[0])
+        {
+            case "C_WHO":
+                c.clientName = splitedData[1];
+                Broadcast("S_CNN|" + c.clientName, clients);
+                break;
+
+            default:
+                Debug.Log("No condition for " + splitedData[0]);
+                break;
+        }
     }
     private void StartListening()
     {
         server.BeginAcceptTcpClient(AcceptTcpClient, server);
-
     }
     private void AcceptTcpClient(IAsyncResult ar)
     {
         TcpListener listener = (TcpListener)ar.AsyncState;
         ServerClient sc = new ServerClient(listener.EndAcceptTcpClient(ar));
         clients.Add(sc);
-
-        Debug.Log("Somebody has connected");
+        string allUsers = "";
+        foreach (ServerClient client in clients)
+        {
+            allUsers += client.clientName + '|';
+        }
         StartListening();
+        Broadcast("S_WHO|" + allUsers, clients[clients.Count - 1]);
     }
     private bool IsConnected(TcpClient c)
     {
