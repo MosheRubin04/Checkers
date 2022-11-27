@@ -53,8 +53,9 @@ public class GameManager : MonoBehaviour
 
             Client c = Instantiate(clientPrefab).GetComponent<Client>();
             c.clientName = playerNameInput.text;
-            // if (c.clientName == null)
-            c.clientName = "Host";
+            c.isHost = true;
+            if (c.clientName == "")
+                c.clientName = "Host";
             c.ConnectToServer("127.0.0.1", 6321);
 
         }
@@ -78,7 +79,7 @@ public class GameManager : MonoBehaviour
         {
             Client c = Instantiate(clientPrefab).GetComponent<Client>();
             c.clientName = playerNameInput.text;
-            if (c.clientName == null)
+            if (c.clientName == "")
                 c.clientName = "Client";
             c.ConnectToServer(hostAddress, 6321);
             connectMenu.SetActive(false);

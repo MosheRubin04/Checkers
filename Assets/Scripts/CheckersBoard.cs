@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CheckersBoard : MonoBehaviour
 {
+
+    public static CheckersBoard Instance { set; get; }
     public Piece[,] pieces = new Piece[8, 8];
 
 
@@ -26,10 +28,16 @@ public class CheckersBoard : MonoBehaviour
     private Vector2 mouseOver;
     private List<Piece> forcedPieces;
 
+    private Client client;
+
     private void Start()
     {
-        isWhite = true;
+        Instance = this;
+        client = FindObjectOfType<Client>();
+        isWhite = client.isHost;
         isWhiteTurn = true;
+
+        forcedPieces = new List<Piece>();
         GenerateBoard();
     }
 
@@ -63,7 +71,6 @@ public class CheckersBoard : MonoBehaviour
     private List<Piece> ScanForPossibleMove(Piece p, int x, int y)
     {
         Debug.Log("ScanForPossibleMove called with piece ", p);
-        forcedPieces = new List<Piece>();
         if (p.IsForceToMove(pieces, x, y))
             forcedPieces.Add(pieces[x, y]);
         Debug.Log("forcedPieces: " + forcedPieces);
@@ -85,7 +92,7 @@ public class CheckersBoard : MonoBehaviour
         Debug.Log("forcedPieces: " + forcedPieces);
         return forcedPieces;
     }
-    private void TryMove(int x1, int y1, int x2, int y2)
+    public void TryMove(int x1, int y1, int x2, int y2)
     {
         forcedPieces = ScanForPossibleMove();
         //? Multiplayer Support
@@ -187,6 +194,15 @@ public class CheckersBoard : MonoBehaviour
             }
         }
 
+        string moveMassage = "C_MOV|";
+        moveMassage += startDrag.x.ToString() + "|";
+        moveMassage += startDrag.y.ToString() + "|";
+        moveMassage += endDrag.x.ToString() + "|";
+        moveMassage += endDrag.y.ToString();
+
+        client.Send(moveMassage);
+
+
         if (ScanForPossibleMove(selectedPiece, x, y).Count != 0 && hasKilled)
             return;
 
@@ -194,7 +210,7 @@ public class CheckersBoard : MonoBehaviour
         ResetSelectedPiece();
 
         isWhiteTurn = !isWhiteTurn;
-        isWhite = !isWhite;
+        // isWhite = !isWhite; //? Single Player
         CheckVictoryCondition();
     }
     private void CheckVictoryCondition()

@@ -104,9 +104,12 @@ public class Server : MonoBehaviour
         {
             case "C_WHO":
                 c.clientName = splitedData[1];
+                c.isHost = (splitedData[1] == "0") ? false : true;
                 Broadcast("S_CNN|" + c.clientName, clients);
                 break;
-
+            case "C_MOV":
+                Broadcast("S_MOV|" + splitedData[1] + "|" + splitedData[2] + "|" + splitedData[3] + "|" + splitedData[4], clients);
+                break;
             default:
                 Debug.Log("No condition for " + splitedData[0]);
                 break;
@@ -154,6 +157,8 @@ public class Server : MonoBehaviour
 public class ServerClient
 {
     public string clientName;
+    public bool isHost = false;
+
     public TcpClient tcp;
 
     public ServerClient(TcpClient tcp)

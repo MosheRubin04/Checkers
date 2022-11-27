@@ -9,6 +9,7 @@ public class Client : MonoBehaviour
 {
 
     public string clientName;
+    public bool isHost = false;
     private bool socketReady;
     private TcpClient socket;
     private NetworkStream stream;
@@ -82,7 +83,7 @@ public class Client : MonoBehaviour
     //? Read messages from the server
     private void OnInComingData(string data)
     {
-        Debug.Log("Client_" + clientName + ": OnInComingData: " + data);
+        Debug.Log("Client_" + clientName + " OnInComingData: " + data);
         string[] splitedData = data.Split('|');
         switch (splitedData[0])
         {
@@ -91,10 +92,17 @@ public class Client : MonoBehaviour
                 {
                     UserConnected(splitedData[i], false);
                 }
-                Send("C_WHO|" + clientName);
+                Send("C_WHO|" + clientName + "|" + ((isHost) ? 1 : 0));
                 break;
             case "S_CNN":
                 UserConnected(splitedData[1], false);
+                break;
+            case "S_MOV":
+                int x1 = int.Parse(splitedData[1]);
+                int y1 = int.Parse(splitedData[2]);
+                int x2 = int.Parse(splitedData[3]);
+                int y2 = int.Parse(splitedData[4]);
+                CheckersBoard.Instance.TryMove(x1, y1, x2, y2);
                 break;
             default:
                 Debug.Log("No condition for " + splitedData[0]);
