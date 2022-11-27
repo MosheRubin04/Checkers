@@ -364,8 +364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02a23e46f23944f4eb74026a3d914312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whitePiecePrefab: {fileID: 3565967008324298503, guid: ca5d92c560635614d87c7cc6c4531c69, type: 3}
-  blackPiecePrefab: {fileID: 4432435195390655574, guid: 9623505e204f3ed48870400ea82b7d21, type: 3}
+  whitePiecePrefab: {fileID: 6680165378032598257, guid: d3555b982a78ead43bd74539800858aa, type: 3}
+  blackPiecePrefab: {fileID: 8361482168665029994, guid: 86fa6a4b16f7bf84293c9ca546795f1a, type: 3}
   isWhiteTurn: 1
   isWhite: 1
   boardOffset: {x: -4, y: 0, z: -4}

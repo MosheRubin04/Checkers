@@ -148,7 +148,7 @@ public class CheckersBoard : MonoBehaviour
                         //? Remove piece
                         Debug.Log("Jumped over a piece, Destroy ", p.gameObject);
                         pieces[(x1 + x2) / 2, (y1 + y2) / 2] = null;
-                        Destroy(p.gameObject);
+                        DestroyImmediate(p.gameObject);
                         hasKilled = true;
                     }
                 }
